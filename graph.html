@@ -5,25 +5,41 @@
     <style>
         .bar-container {
             display: inline-block;
-            width: 50px;
-            align-items: center;
+            width: 80px; /* コンテナの幅を広げる */
             text-align: center;
             margin: 10px;
         }
 
         .bar {
-            background-color: blue;
-            width: 30px;
+            background-color: #4caf50; /* 明るい色に変更 */
+            width: 40px; /* バーの幅を広げる */
             height: 0;
             margin: 0 auto;
             transition: height 0.3s ease;
+            border-radius: 5px; /* バーの端に丸みを加える */
+        }
+
+        .bar-value {
+            margin: 5px 0;
+            font-weight: bold; /* 数値のフォントを太く */
         }
 
         button {
             display: block;
             margin: 5px auto;
+            width: 40px; /* ボタンの幅を調整 */
+            border-radius: 5px; /* ボタンの端に丸みを加える */
+            background-color: #f44336; /* ボタンの色を変更 */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #d32f2f; /* ホバー時の色を変更 */
         }
     </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div id="graph">
@@ -71,7 +87,6 @@
     function updateValue(index, change) {
         values[index] += change;
         if (values[index] < 0) values[index] = 0;
-        document.getElementById('value' + index).innerHTML = values[index];
         document.getElementById('bar' + index).style.height = (values[index] * 20) + 'px';
     }
 });
