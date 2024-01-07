@@ -2,6 +2,18 @@
 <html>
 <head>
     <title>Color Change Buttons</title>
+    <style>
+      .button-row {
+          margin-bottom: 10px;
+      }
+
+      button {
+          width: 100px; /* ボタンの幅 */
+          height: 50px; /* ボタンの高さ */
+          margin-right: 5px;
+          font-size: 20px; /* フォントサイズ */
+      }
+  </style>
 </head>
 <body>
     <div id="buttons">
@@ -9,20 +21,29 @@
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
-  const buttonsContainer = document.getElementById('buttons');
+        const buttonsContainer = document.getElementById('buttons');
+        let buttonRow = document.createElement('div');
+        buttonRow.className = 'button-row';
+        buttonsContainer.appendChild(buttonRow);
 
-  // 1から40までのボタンを生成
-  for (let i = 1; i <= 40; i++) {
-      let button = document.createElement('button');
-      button.innerHTML = i;
-      button.style.backgroundColor = 'red';
-      button.onclick = function() {
-          this.style.backgroundColor = this.style.backgroundColor === 'red' ? 'blue' : 'red';
-      };
-      buttonsContainer.appendChild(button);
-  }
-});
+        // 1から40までのボタンを生成
+        for (let i = 1; i <= 40; i++) {
+          let button = document.createElement('button');
+          button.innerHTML = i;
+          button.style.backgroundColor = 'gray';
+          button.onclick = function() {
+              this.style.backgroundColor = this.style.backgroundColor === 'red' ? 'blue' : 'red';
+          };
+          buttonRow.appendChild(button);
 
+          // 10個ごとに改行
+          if (i % 10 === 0) {
+              buttonRow = document.createElement('div');
+              buttonRow.className = 'button-row';
+              buttonsContainer.appendChild(buttonRow);
+          }
+        }
+      });
     </script>
 </body>
 </html>
