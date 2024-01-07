@@ -3,6 +3,10 @@
 <head>
     <title>Interactive Bar Chart with Chart.js</title>
     <style>
+        body{
+            touch-action: manipulation;
+        }
+
         #buttons {
             text-align: center;
             margin-top: 20px;
@@ -31,10 +35,16 @@
             font-size: 20px; /* ラベルのフォントサイズを大きく */
             margin: 5px 0; /* ラベルのマージンを調整 */
         }
+
+        #barChart {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 <body>
-        <canvas id="barChart"></canvas>
+    <canvas id="barChart"></canvas>
 
     <div id="buttons">
         <!-- ボタンがここに生成されます -->
