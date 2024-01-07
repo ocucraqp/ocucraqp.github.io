@@ -1,96 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vertical Bar Graph with Buttons</title>
+    <title>Interactive Bar Chart with Chart.js</title>
     <style>
-        .bar-container {
-            display: inline-block;
-            width: 80px; /* コンテナの幅を広げる */
+        #buttons {
             text-align: center;
-            margin: 10px;
+            margin-top: 20px;
         }
 
-        .bar {
-            background-color: #4caf50; /* 明るい色に変更 */
-            width: 40px; /* バーの幅を広げる */
-            height: 0;
-            margin: 0 auto;
-            transition: height 0.3s ease;
-            border-radius: 5px; /* バーの端に丸みを加える */
-        }
-
-        .bar-value {
-            margin: 5px 0;
-            font-weight: bold; /* 数値のフォントを太く */
+        .button-div {
+            display: inline-block;
+            margin: 0 10px;
+            text-align: center;
         }
 
         button {
             display: block;
             margin: 5px auto;
             width: 40px; /* ボタンの幅を調整 */
+            height: 40px; /* ボタンの高さを調整 */
             border-radius: 5px; /* ボタンの端に丸みを加える */
             background-color: #f44336; /* ボタンの色を変更 */
+            font-size: 20px;
             color: white;
             border: none;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #d32f2f; /* ホバー時の色を変更 */
+        .label {
+            font-size: 20px; /* ラベルのフォントサイズを大きく */
+            margin: 5px 0; /* ラベルのマージンを調整 */
         }
     </style>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div id="graph">
-        <!-- 棒グラフとボタンがここに表示されます -->
+        <canvas id="barChart"></canvas>
+
+    <div id="buttons">
+        <!-- ボタンがここに生成されます -->
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-    const graphContainer = document.getElementById('graph');
+            const data = {
+                labels: ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                datasets: [{
+                    label: '2個のサイコロの合計値の出現回数',
+                    data: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
 
-    let values = new Array(12).fill(0); // 12個の数値の配列を0で初期化
+            const ctx = document.getElementById('barChart').getContext('2d');
+            const barChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMin: 0,
+                            suggestedMax: 10,
+                            ticks: {
+                                font: {
+                                    size: 20 // X軸のフォントサイズ
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 20 // X軸のフォントサイズ
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 20 // 凡例のフォントサイズ
+                                }
+                            }
+                        },
+                    },
+                    animation: {
+                        duration: 200,
+                    }
+                }
+            });
 
-    // 棒グラフとボタンを生成
-    for (let i = 2; i <= 12; i++) {
-        let barContainer = document.createElement('div');
-        barContainer.classList.add('bar-container');
+            // ボタンの生成
+            const buttonsContainer = document.getElementById('buttons');
+            data.labels.forEach((label, index) => {
+                let buttonDiv = document.createElement('div');
+                buttonDiv.className = 'button-div';
 
-        // 棒グラフを生成
-        let bar = document.createElement('div');
-        bar.classList.add('bar');
-        bar.id = 'bar' + i;
-        barContainer.appendChild(bar);
+                let labelSpan = document.createElement('span');
+                labelSpan.className = 'label';
+                labelSpan.textContent = label;
 
-        // 数値表示
-        let valueSpan = document.createElement('span');
-        valueSpan.innerHTML = i;
-        valueSpan.id = 'value' + i;
-        barContainer.appendChild(valueSpan);
+                let plusButton = document.createElement('button');
+                plusButton.textContent = '+';
+                plusButton.onclick = function() { updateData(index, 1); };
 
-        // ボタンを生成
-        let plusButton = document.createElement('button');
-        plusButton.innerHTML = '+';
-        let minusButton = document.createElement('button');
-        minusButton.innerHTML = '-';
-        
-        plusButton.onclick = function() { updateValue(i, 1); };
-        minusButton.onclick = function() { updateValue(i, -1); };
+                let minusButton = document.createElement('button');
+                minusButton.textContent = '-';
+                minusButton.style.backgroundColor = 'blue';
+                minusButton.onclick = function() { updateData(index, -1); };
 
-        barContainer.appendChild(plusButton);
-        barContainer.appendChild(minusButton);
+                buttonDiv.appendChild(labelSpan);
+                buttonDiv.appendChild(plusButton);
+                buttonDiv.appendChild(minusButton);
+                buttonsContainer.appendChild(buttonDiv);
+            });
 
-        graphContainer.appendChild(barContainer);
-    }
-
-    // ボタンの値を更新し、棒グラフを更新する関数
-    function updateValue(index, change) {
-        values[index] += change;
-        if (values[index] < 0) values[index] = 0;
-        document.getElementById('bar' + index).style.height = (values[index] * 20) + 'px';
-    }
-});
-
+            // データ更新関数
+            function updateData(index, change) {
+                data.datasets[0].data[index] += change;
+                if (data.datasets[0].data[index] < 0) {
+                    data.datasets[0].data[index] = 0; // データ値が負の数にならないように制限
+                }
+                barChart.update();
+            }
+        });
     </script>
 </body>
 </html>
