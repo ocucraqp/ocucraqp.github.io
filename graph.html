@@ -1,12 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Graph</title>
+    <title>Vertical Bar Graph with Buttons</title>
+    <style>
+        .bar-container {
+    display: inline-block;
+    width: 50px;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+}
+
+.bar {
+    background-color: blue;
+    width: 30px;
+    height: 0;
+    margin: 0 auto;
+    transition: height 0.3s ease;
+}
+
+button {
+    display: block;
+    margin: 5px auto;
+}
+
+    </style>
 </head>
 <body>
-    <div id="buttons">
-        <!-- JavaScriptでボタンが生成されます -->
+    <div id="graph">
+        <!-- 棒グラフとボタンがここに表示されます -->
     </div>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const graphContainer = document.getElementById('graph');
+
+    let values = new Array(12).fill(0); // 12個の数値の配列を0で初期化
+
+    // 棒グラフとボタンを生成
+    for (let i = 2; i <= 12; i++) {
+        let barContainer = document.createElement('div');
+        barContainer.classList.add('bar-container');
+
+        // 棒グラフを生成
+        let bar = document.createElement('div');
+        bar.classList.add('bar');
+        bar.id = 'bar' + i;
+        barContainer.appendChild(bar);
+
+        // 数値表示
+        let valueSpan = document.createElement('span');
+        valueSpan.innerHTML = i;
+        valueSpan.id = 'value' + i;
+        barContainer.appendChild(valueSpan);
+
+        // ボタンを生成
+        let plusButton = document.createElement('button');
+        plusButton.innerHTML = '+';
+        let minusButton = document.createElement('button');
+        minusButton.innerHTML = '-';
+        
+        plusButton.onclick = function() { updateValue(i, 1); };
+        minusButton.onclick = function() { updateValue(i, -1); };
+
+        barContainer.appendChild(plusButton);
+        barContainer.appendChild(minusButton);
+
+        graphContainer.appendChild(barContainer);
+    }
+
+    // ボタンの値を更新し、棒グラフを更新する関数
+    function updateValue(index, change) {
+        values[index] += change;
+        if (values[index] < 0) values[index] = 0;
+        document.getElementById('value' + index).innerHTML = values[index];
+        document.getElementById('bar' + index).style.height = (values[index] * 20) + 'px';
+    }
+});
+
+    </script>
 </body>
 </html>
